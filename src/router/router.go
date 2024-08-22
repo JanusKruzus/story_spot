@@ -20,7 +20,7 @@ func SetupRoutes() {
 
 	r.GET("/home", h.home)
 	r.GET("/login", h.login)
-	r.GET("/signin", h.signup)
+	r.GET("/signup", h.signup)
 
 	fmt.Printf("Server running on localhost:3000...\n")
 	r.Run(":3000")
