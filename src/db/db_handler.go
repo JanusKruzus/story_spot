@@ -31,7 +31,7 @@ func AddTable[T User](table T) {
 	}
 }
 
-func GetTableRows[T User](table *[]T) {
+func GetTableRows[T User](table *[]T) { //inserts into table selected rows of the same data type
 	result := Db.Find(table)
 	if result.Error != nil {
 		fmt.Println("Error fetching: ", result.Error)
