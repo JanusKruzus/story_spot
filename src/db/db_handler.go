@@ -37,3 +37,10 @@ func GetTableRows[T User](table *[]T) { //inserts into table selected rows of th
 		fmt.Println("Error fetching: ", result.Error)
 	}
 }
+
+func GetSingleRowsWhere[T User](table *T, columnName string, value string) {
+	result := Db.First(table, columnName+" = ?", value)
+	if result.Error != nil {
+		fmt.Println("Error fetching: ", result.Error)
+	}
+}

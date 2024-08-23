@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="static/css/global-style.css">
+    <link rel="stylesheet" href="static/css/form.css">
 </head>
 <body>
     <header>
+        <!--
         <nav>
             <input type="checkbox" id="sidebar-active">
             <label for="sidebar-active" class="open-sidebar-button">
@@ -29,10 +31,30 @@
                 <a href="/login">Login</a>
             </div>
         </nav>
+        -->
     </header>
     <main>
-        <p>Login</p>
-    </main>
+        <form action="/login" method="post" name="loginForm">
+        <div class="signup-container">
 
+                <h1 class="signup-title">Login</h1>
+
+                <div class="input-group">
+                    <label for="email" class="input-label">Email</label>
+                    <input type="email" class="input-box" id="email" name="email">
+                </div>
+
+                <div class="input-group">
+                    <label for="password" class="input-label">Password</label>
+                    <input type="password" class="input-box" id="password" name="password">
+                </div>
+
+                <div class="center-button">
+                <button type="submit" class="button-1">Sign up</button>
+                </div>
+
+        </div>
+    </form> 
+    </main>
 </body>
 </html>

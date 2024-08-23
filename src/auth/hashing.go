@@ -18,8 +18,8 @@ func CreatePasswordHash(password string) string {
 	return string(bytes)
 }
 
-func CheckPasswordHash(password, hash string) bool {
+func ComparePasswordHash(password, hash string) error {
 	saltedPass := password + hashSalt
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(saltedPass))
-	return err == nil
+	return err
 }

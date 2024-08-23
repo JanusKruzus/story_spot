@@ -1,0 +1,14 @@
+.table{
+    border-collapse: collapse;
+}
+
+.table .grid-el{
+    padding: 3px;
+    border: 1px solid black;
+    text-align: start;
+}
+
+.tr {
+    display: flex;
+    flex-direction: column;
+}
