@@ -8,7 +8,13 @@ require (
 	gorm.io/gorm v1.25.11
 )
 
-require github.com/badoux/checkmail v1.2.4
+require (
+	github.com/badoux/checkmail v1.2.4
+	github.com/gorilla/sessions v1.4.0
+	github.com/joho/godotenv v1.5.1
+)
+
+require github.com/gorilla/securecookie v1.1.2 // indirect
 
 require (
 	github.com/bytedance/sonic v1.12.1 // indirect

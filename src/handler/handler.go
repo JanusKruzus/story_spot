@@ -3,54 +3,48 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"storyspot/src/auth"
 	"storyspot/src/db"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 )
 
-type handler struct{}
+type Handler struct{}
 
-var r *gin.Engine
+var store *sessions.CookieStore
 
-func SetupRoutes() {
-
-	h := &handler{}
-	r = gin.Default()
-	r.LoadHTMLGlob("templates/*")
-	r.Static("/static", "./static/")
-
-	r.GET("/home", h.home)
-	r.GET("/login", h.login)
-	r.GET("/signup", h.signup)
-	r.GET("/admin", h.admin)
-
-	r.POST("/login", h.loginForm)
-	r.POST("/signup", h.signupForm)
-
-	fmt.Printf("Server running on localhost:3000...\n")
-	r.Run(":3000")
+func Init() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println(err)
+	}
+	store = sessions.NewCookieStore([]byte(os.Getenv("AUTH_KEY")))
 }
 
-func (h *handler) home(c *gin.Context) {
+func Home(c *gin.Context) {
+	session, _ := store.Get(c.Request, "login")
+
 	c.HTML(http.StatusOK, "home.tmpl", gin.H{
-		"title": "idk",
+		"name": session.Values["name"],
 	})
 }
 
-func (h *handler) login(c *gin.Context) {
+func Login(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.tmpl", gin.H{
 		"title": "idk",
 	})
 }
 
-func (h *handler) signup(c *gin.Context) {
+func Signup(c *gin.Context) {
 	c.HTML(http.StatusOK, "signup.tmpl", gin.H{
 		"title": "idk",
 	})
 }
 
-func (h *handler) admin(c *gin.Context) {
+func Admin(c *gin.Context) {
 
 	var users []db.User
 	db.GetTableRows(&users)
@@ -60,10 +54,7 @@ func (h *handler) admin(c *gin.Context) {
 	})
 }
 
-/*	fmt.Println("Everything good to go 👍")
-	fmt.Printf("name: %v\nemail: %v\npassword: %v\n", name, email, password)*/
-
-func (h *handler) signupForm(c *gin.Context) {
+func SignupForm(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
@@ -88,7 +79,7 @@ func (h *handler) signupForm(c *gin.Context) {
 
 }
 
-func (h *handler) loginForm(c *gin.Context) {
+func LoginForm(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
@@ -105,5 +96,20 @@ func (h *handler) loginForm(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("User authenticated")
+	session, errSession := store.Get(c.Request, "login")
+
+	if errSession != nil {
+		c.String(http.StatusInternalServerError, "Unable to store session")
+		return
+	}
+
+	session.Values["name"] = user.Name
+
+	errSave := session.Save(c.Request, c.Writer)
+	if errSave != nil {
+		c.String(http.StatusInternalServerError, "Unable to save session")
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/home")
 }
